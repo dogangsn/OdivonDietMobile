@@ -1,17 +1,23 @@
 {
   "expo": {
-    "name": "OdivonDietMobile",
-    "slug": "OdivonDietMobile",
-    "version": "1.0.0",
+    "name": "OdivonDiet",
+    "slug": "odivon-diet",
+    "scheme": "odivon",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.odivon.diet",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "OdivonDiet, dan\u0131\u015fan verilerinizi korumak i\u00e7in Face ID kullan\u0131r."
+      }
     },
     "android": {
+      "package": "com.odivon.diet",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#6D4AFF",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -19,7 +25,38 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160,
+          "backgroundColor": "#F6F7FB",
+          "dark": {
+            "backgroundColor": "#0B0D17"
+          }
+        }
+      ],
+      "expo-image",
+      "expo-local-authentication",
+      [
+        "expo-notifications",
+        {
+          "color": "#6D4AFF"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "apiBaseUrl": "https://mainapi.odivon.com/api/v1"
     }
   }
 }
