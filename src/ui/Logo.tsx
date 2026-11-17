@@ -1,23 +1,17 @@
-import { LinearGradient } from 'expo-linear-gradient';
-import Svg, { Path } from 'react-native-svg';
+import { View } from 'react-native';
+import Svg, { Ellipse, G } from 'react-native-svg';
 
-/** OdivonDiet mark: leaf-drop in a gradient squircle. */
+/** Odivon mark: the slanted violet "O" on a navy tile (same as the app icon). */
 export function Logo({ size = 48, light }: { size?: number; light?: boolean }) {
+  const tile = light ? '#FFFFFF' : '#101828';
   return (
-    <LinearGradient
-      colors={light ? ['#FFFFFF', '#EDE9FE'] : ['#34D399', '#059669']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={{ width: size, height: size, borderRadius: size * 0.3, alignItems: 'center', justifyContent: 'center' }}
-    >
-      <Svg width={size * 0.56} height={size * 0.56} viewBox="0 0 24 24">
-        <Path
-          d="M12 3c3.9 3.2 6 6.4 6 9.6A6 6 0 0 1 12 18.6a6 6 0 0 1-6-6C6 9.4 8.1 6.2 12 3Z"
-          fill={light ? '#7C3AED' : '#FFFFFF'}
-        />
-        <Path d="M12 9.5v11" stroke={light ? '#FFFFFF' : '#059669'} strokeWidth={1.6} strokeLinecap="round" />
-        <Path d="M12 14.2l2.4-2.2" stroke={light ? '#FFFFFF' : '#059669'} strokeWidth={1.6} strokeLinecap="round" />
+    <View style={{ width: size, height: size, borderRadius: size * 0.26, backgroundColor: tile, alignItems: 'center', justifyContent: 'center' }}>
+      <Svg width={size} height={size} viewBox="0 0 150 150">
+        <G transform="rotate(125.2 75 75)">
+          <Ellipse cx={75} cy={75} rx={56} ry={46.7} fill="#917AFF" />
+          <Ellipse cx={75} cy={75} rx={33.1} ry={23.6} fill={tile} />
+        </G>
       </Svg>
-    </LinearGradient>
+    </View>
   );
 }
