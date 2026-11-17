@@ -21,7 +21,7 @@ const MESSAGES: Record<string, string> = {
 };
 
 export async function signInWithPassword(email: string, password: string): Promise<FirebaseTokens> {
-  if (!firebaseConfigured) throw new Error('Canlı giriş henüz yapılandırılmadı. Demo hesabıyla devam edebilirsiniz.');
+  if (!firebaseConfigured) throw new Error('Uygulamada giriş ayarı eksik (Firebase API anahtarı). Lütfen yöneticinize başvurun.');
   const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

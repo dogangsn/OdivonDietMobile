@@ -19,11 +19,10 @@ export default function Login() {
   const insets = useSafeAreaInsets();
   const mode = useSession((s) => s.mode);
   const signIn = useSession((s) => s.signIn);
-  const startDemo = useSession((s) => s.startDemo);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [show, setShow] = useState(false);
-  const [busy, setBusy] = useState<'login' | 'demo' | null>(null);
+  const [busy, setBusy] = useState<'login' | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   if (mode) return <Redirect href="/(tabs)" />;
@@ -43,12 +42,6 @@ export default function Login() {
     } finally {
       setBusy(null);
     }
-  };
-
-  const demo = async () => {
-    setBusy('demo');
-    await startDemo();
-    router.replace('/(tabs)');
   };
 
   return (
@@ -136,19 +129,11 @@ export default function Login() {
             <Button label="Giriş yap" size="lg" full loading={busy === 'login'} onPress={submit} />
             {!firebaseConfigured ? (
               <Text variant="caption" tone="subtle" align="center">
-                Canlı giriş yapılandırılınca aktifleşir.
+                Giriş henüz yapılandırılmadı. Lütfen yöneticinize başvurun.
               </Text>
             ) : null}
           </Card>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-            <View style={{ flex: 1, height: 1, backgroundColor: colors.border }} />
-            <Text variant="caption" tone="subtle">
-              veya
-            </Text>
-            <View style={{ flex: 1, height: 1, backgroundColor: colors.border }} />
-          </View>
-          <Button label="Demo hesabıyla keşfet" icon="sparkles-outline" variant="secondary" size="lg" full loading={busy === 'demo'} onPress={demo} />
           <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6, marginTop: 4 }}>
             <Icon name="shield-checkmark-outline" size={14} color={colors.textSubtle} />
             <Text variant="caption" tone="subtle">
