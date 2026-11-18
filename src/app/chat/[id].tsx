@@ -1,14 +1,14 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, TextInput, View } from 'react-native';
+import { FlatList, Platform, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { Message } from '@/api/types';
 import { useClientOverview, useMarkRead, useMessages, useSendMessage } from '@/features/queries';
 import { time } from '@/lib/format';
 import { useAppTheme } from '@/theme/theme';
 import { font } from '@/theme/tokens';
-import { Avatar, Icon, IconButton, ScalePressable, Text } from '@/ui';
+import { Avatar, Icon, IconButton, ScalePressable, Text, KeyboardSafe } from '@/ui';
 
 function dayLabel(iso: string) {
   const d = new Date(iso);
@@ -87,7 +87,7 @@ export default function Chat() {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardSafe style={{ flex: 1, backgroundColor: colors.bg }}>
       <View style={{ paddingTop: insets.top + 8, paddingHorizontal: 16, paddingBottom: 12, flexDirection: 'row', alignItems: 'center', gap: 12, borderBottomWidth: 1, borderBottomColor: colors.border, backgroundColor: colors.bgElevated }}>
         <IconButton icon="chevron-back" label="Geri" onPress={() => router.back()} />
         <ScalePressable onPress={() => router.push(`/client/${id}`)} accessibilityLabel={`${name} profili`} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, flex: 1 }}>
@@ -133,6 +133,6 @@ export default function Chat() {
           </LinearGradient>
         </ScalePressable>
       </View>
-    </KeyboardAvoidingView>
+    </KeyboardSafe>
   );
 }

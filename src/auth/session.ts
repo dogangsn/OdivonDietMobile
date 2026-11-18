@@ -2,7 +2,7 @@ import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import { create } from 'zustand';
 import { createDemoApi } from '@/api/demo';
-import { createHttpApi } from '@/api/http';
+import { ApiError, createHttpApi } from '@/api/http';
 import type { DietApi } from '@/api/port';
 import { refreshIdToken, signInWithPassword, type FirebaseTokens } from './firebase';
 
@@ -69,8 +69,16 @@ export const useSession = create<SessionState>((set) => ({
   },
   signIn: async (email, password) => {
     const tokens = await signInWithPassword(email, password);
+    const api = liveApi(tokens);
+    // Make sure MainAPI accepts this account (tenant, diet module, verified e-mail) before entering the app.
+    try {
+      await api.me();
+      await api.dashboard();
+    } catch (e) {
+      throw new Error(describeApiError(e));
+    }
     await save({ mode: 'live', tokens });
-    set({ mode: 'live', api: liveApi(tokens) });
+    set({ mode: 'live', api });
   },
   startDemo: async () => {
     await save({ mode: 'demo' });
@@ -86,4 +94,24 @@ export function useApi(): DietApi {
   const api = useSession((s) => s.api);
   if (!api) throw new Error('Oturum yok');
   return api;
+}
+
+const API_MESSAGES: Record<string, string> = {
+  TENANT_NOT_FOUND: 'Hesabınız MainAPI\'de bir işletmeye bağlı değil. Yöneticinizden sizi personel olarak eklemesini isteyin.',
+  EMAIL_NOT_VERIFIED: 'E-posta adresiniz doğrulanmamış. Gelen kutunuzdaki doğrulama bağlantısına tıklayın.',
+  FORBIDDEN_MODULE: 'İşletmenizde OdivonDiet ürünü açık değil.',
+  SUBSCRIPTION_REQUIRED: 'İşletmenizin aboneliği aktif değil. Web panelden aboneliği yenileyin.',
+  FORBIDDEN_PERMISSION: 'Bu uygulamayı kullanma yetkiniz yok. Yöneticinizden rol atamasını isteyin.',
+  FORBIDDEN_ROLE: 'Bu uygulamayı kullanma yetkiniz yok. Yöneticinizden rol atamasını isteyin.',
+  INVALID_TOKEN: 'Oturum doğrulanamadı (Firebase projesi uyuşmuyor olabilir).',
+  AUTH_REQUIRED: 'Oturum doğrulanamadı.',
+  CLIENT_UPGRADE_REQUIRED: 'Uygulamanın yeni sürümünü yükleyin.',
+};
+
+function describeApiError(e: unknown): string {
+  if (e instanceof ApiError) {
+    const text = API_MESSAGES[e.code] ?? e.message;
+    return `${text} (kod: ${e.code}, ${e.status})`;
+  }
+  return 'MainAPI\'ye ulaşılamadı. İnternet bağlantınızı kontrol edin.';
 }

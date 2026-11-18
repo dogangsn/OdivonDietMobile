@@ -1,9 +1,10 @@
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { Platform, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppTheme } from '@/theme/theme';
 import { IconButton } from './Button';
+import { KeyboardSafe } from './KeyboardSafe';
 import { Text } from './Text';
 
 /** Sheet-like form screen: title, close button, scrollable body and a sticky footer. */
@@ -12,7 +13,7 @@ export function ModalScreen({ title, subtitle, children, footer }: { title: stri
   const insets = useSafeAreaInsets();
   const top = Platform.OS === 'ios' ? 12 : insets.top + 8;
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardSafe style={{ flex: 1, backgroundColor: colors.bg }}>
       {Platform.OS === 'ios' ? (
         <View style={{ alignItems: 'center', paddingTop: 8 }}>
           <View style={{ width: 40, height: 5, borderRadius: 3, backgroundColor: colors.borderStrong }} />
@@ -39,6 +40,6 @@ export function ModalScreen({ title, subtitle, children, footer }: { title: stri
           {footer}
         </View>
       ) : null}
-    </KeyboardAvoidingView>
+    </KeyboardSafe>
   );
 }

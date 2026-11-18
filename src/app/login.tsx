@@ -1,12 +1,12 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { Redirect, router } from 'expo-router';
-import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Platform, ScrollView, View, type ScrollViewInstance } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { firebaseConfigured } from '@/auth/firebase';
 import { useSession } from '@/auth/session';
 import { useAppTheme } from '@/theme/theme';
-import { Button, Card, Icon, Input, Logo, ScalePressable, Text } from '@/ui';
+import { Button, Card, Icon, Input, Logo, ScalePressable, Text, KeyboardSafe, useKeyboardHeight } from '@/ui';
 
 const FEATURES = [
   { icon: 'sunny-outline' as const, text: 'Günün randevuları tek ekranda' },
@@ -24,6 +24,13 @@ export default function Login() {
   const [show, setShow] = useState(false);
   const [busy, setBusy] = useState<'login' | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const scroll = useRef<ScrollViewInstance>(null);
+  const keyboard = useKeyboardHeight();
+
+  // Bring the form above the keyboard as soon as it opens.
+  useEffect(() => {
+    if (keyboard > 0) setTimeout(() => scroll.current?.scrollToEnd({ animated: true }), 60);
+  }, [keyboard]);
 
   if (mode) return <Redirect href="/(tabs)" />;
 
@@ -45,8 +52,8 @@ export default function Login() {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled" bounces={false}>
+    <KeyboardSafe style={{ flex: 1, backgroundColor: colors.bg }}>
+      <ScrollView ref={scroll} contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled" bounces={false}>
         <LinearGradient
           colors={colors.heroGradient}
           start={{ x: 0, y: 0 }}
@@ -142,6 +149,6 @@ export default function Login() {
           </View>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </KeyboardSafe>
   );
 }

@@ -19,3 +19,4 @@ export * from './TrendChart';
 export * from './Logo';
 export * from './MacroBar';
 export * from './ModalScreen';
+export * from './KeyboardSafe';
