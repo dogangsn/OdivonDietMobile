@@ -31,6 +31,7 @@ function RootStack() {
         <Stack.Screen name="measure/[id]" options={{ presentation: 'modal' }} />
         <Stack.Screen name="consultation/new" options={{ presentation: 'modal' }} />
         <Stack.Screen name="task/new" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="chat/new" options={{ presentation: 'modal' }} />
       </Stack>
     </>
   );

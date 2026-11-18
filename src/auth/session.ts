@@ -90,10 +90,14 @@ export const useSession = create<SessionState>((set) => ({
   },
 }));
 
+/** Used while signed out: screens still mounted during the sign-out transition must not crash. */
+const signedOutApi = new Proxy({} as DietApi, {
+  get: () => () => Promise.reject(new Error('Oturum kapalı')),
+});
+
 export function useApi(): DietApi {
   const api = useSession((s) => s.api);
-  if (!api) throw new Error('Oturum yok');
-  return api;
+  return api ?? signedOutApi;
 }
 
 const API_MESSAGES: Record<string, string> = {

@@ -3,14 +3,14 @@ import { View } from 'react-native';
 import { useConversations } from '@/features/queries';
 import { relative } from '@/lib/format';
 import { useAppTheme } from '@/theme/theme';
-import { Avatar, Card, CountBadge, EmptyState, Icon, Screen, Skeleton, Text } from '@/ui';
+import { Avatar, Card, CountBadge, EmptyState, Icon, IconButton, Screen, Skeleton, Text } from '@/ui';
 
 export default function Messages() {
   const { colors } = useAppTheme();
   const { data, isLoading, refetch, isRefetching } = useConversations();
   const unread = (data ?? []).reduce((s, c) => s + c.unreadForStaff, 0);
   return (
-    <Screen tabBar title="Mesajlar" subtitle={unread ? `${unread} okunmamış mesaj` : 'Tüm mesajlar okundu'} refreshing={isRefetching} onRefresh={refetch}>
+    <Screen tabBar title="Mesajlar" subtitle={unread ? `${unread} okunmamış mesaj` : 'Tüm mesajlar okundu'} refreshing={isRefetching} onRefresh={refetch} right={<IconButton icon="create-outline" label="Yeni mesaj" tone="primary" onPress={() => router.push('/chat/new')} />}>
       {isLoading ? (
         [0, 1, 2].map((i) => <Skeleton key={i} height={78} radius={26} />)
       ) : data && data.length ? (
@@ -53,7 +53,7 @@ export default function Messages() {
           })}
         </Card>
       ) : (
-        <EmptyState icon="chatbubbles-outline" title="Henüz mesaj yok" body="Danışan detayından ilk mesajınızı gönderebilirsiniz." />
+        <EmptyState icon="chatbubbles-outline" title="Henüz mesaj yok" body="Sağ üstteki kalem simgesiyle bir danışan seçip mesaj başlatın." />
       )}
     </Screen>
   );

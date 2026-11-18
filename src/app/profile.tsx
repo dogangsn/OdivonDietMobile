@@ -64,9 +64,9 @@ export default function Profile() {
 
       <Card
         onPress={async () => {
+          router.replace('/login');
           await signOut();
           qc.clear();
-          router.replace('/login');
         }}
         style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}
         accessibilityLabel="Çıkış yap"
